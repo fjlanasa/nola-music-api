@@ -49,6 +49,7 @@ class Show(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"), nullable=False)
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
+    distance = 9999999999
 
     artist = relationship(Artist, backref=backref("shows", cascade="all, delete-orphan"))
     venue = relationship(Venue, backref=backref("shows", cascade="all, delete-orphan"))
