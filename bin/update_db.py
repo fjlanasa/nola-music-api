@@ -7,11 +7,16 @@ import csv
 from bs4 import BeautifulSoup
 import time
 import os
+from sqlalchemy import func
 
 @app.cli.command()
 @click.option('--time_delta_value', default=7, help='time delta value')
 
 def update_db(time_delta_value):
+    date_to_remove = Show.query.order_by(Show.date).first().date
+    Show.query.filter(Show.date == date_to_remove).delete()
+    db.session.commit()
+
     date_obj = (datetime.date.today() + datetime.timedelta(time_delta_value))
     date = date_obj.strftime('%Y-%m-%d')
     search_path = "https://www.wwoz.org/calendar/livewire-music?date={}".format(date)
@@ -83,8 +88,8 @@ def update_db(time_delta_value):
             db.session.commit()
             print(date)
 
-    # for artist in db.session.query(Artist).join(Show, isouter=True).group_by(Artist).having(func.count(Show.id) < 1):
-    #     db.session.delete(artist)
-    #     db.session.commit()
+    for artist in db.session.query(Artist).join(Show, isouter=True).group_by(Artist).having(func.count(Show.id) < 1):
+        db.session.delete(artist)
+    db.session.commit()
 
     click.echo('hey!')
