@@ -9,8 +9,10 @@ import time
 import os
 
 @app.cli.command()
-def update_db():
-    date_obj = (datetime.date.today() + datetime.timedelta(7))
+@click.option('--time_delta_value', default=7, help='time delta value')
+
+def update_db(time_delta_value):
+    date_obj = (datetime.date.today() + datetime.timedelta(time_delta_value))
     date = date_obj.strftime('%Y-%m-%d')
     search_path = "https://www.wwoz.org/calendar/livewire-music?date={}".format(date)
     req = requests.get(search_path)
