@@ -9,4 +9,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from app import routes, models
-from bin import seed_db, update_db, artist_search
+from bin import seed_db, update_db, artist_search, remove_old_artists

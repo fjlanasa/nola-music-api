@@ -83,4 +83,8 @@ def update_db(time_delta_value):
             db.session.commit()
             print(date)
 
+    # for artist in db.session.query(Artist).join(Show, isouter=True).group_by(Artist).having(func.count(Show.id) < 1):
+    #     db.session.delete(artist)
+    #     db.session.commit()
+
     click.echo('hey!')
