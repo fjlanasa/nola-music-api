@@ -10,7 +10,7 @@ import os
 from sqlalchemy import func
 
 @app.cli.command()
-@click.option('--time_delta_value', default=7, help='time delta value')
+@click.option('--time_delta_value', default=14, help='time delta value')
 
 def update_db(time_delta_value):
     date_to_remove = Show.query.order_by(Show.date).first().date
