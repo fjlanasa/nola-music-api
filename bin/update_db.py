@@ -14,14 +14,14 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 @click.option('--time_delta_value', default=14, help='time delta value')
 
 def update_db(time_delta_value):
-    engine = create_engine(url)
+    engine = create_engine(os.environ.get('DATABASE_URL'))
     connection = engine.raw_connection()
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
     cursor.execute("VACUUM ANALYSE shows")
     cursor.execute("VACUUM ANALYSE artists")
     cursor.execute("VACUUM ANALYSE venues")
-    
+
     date_to_remove = Show.query.order_by(Show.date).first().date
     Show.query.filter(Show.date == date_to_remove).delete()
     db.session.commit()
