@@ -21,6 +21,7 @@ def update_db(time_delta_value):
     cursor.execute("VACUUM ANALYSE shows")
     cursor.execute("VACUUM ANALYSE artists")
     cursor.execute("VACUUM ANALYSE venues")
+    connection.autocommit()
 
     date_to_remove = Show.query.order_by(Show.date).first().date
     Show.query.filter(Show.date == date_to_remove).delete()
