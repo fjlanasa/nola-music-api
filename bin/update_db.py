@@ -7,7 +7,8 @@ import csv
 from bs4 import BeautifulSoup
 import time
 import os
-from sqlalchemy import func
+from sqlalchemy import func, create_engine
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 @app.cli.command()
 @click.option('--time_delta_value', default=14, help='time delta value')
@@ -91,5 +92,13 @@ def update_db(time_delta_value):
     for artist in db.session.query(Artist).join(Show, isouter=True).group_by(Artist).having(func.count(Show.id) < 1):
         db.session.delete(artist)
     db.session.commit()
+
+    engine = create_engine(url)
+    connection = engine.raw_connection()
+    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = connection.cursor()
+    cursor.execute("VACUUM ANALYSE shows")
+    cursor.execute("VACUUM ANALYSE artists")
+    cursor.execute("VACUUM ANALYSE venues")
 
     click.echo('hey!')
